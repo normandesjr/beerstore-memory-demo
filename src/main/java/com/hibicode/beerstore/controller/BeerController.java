@@ -15,19 +15,25 @@ import java.util.Random;
 @RequestMapping("/beers")
 public class BeerController {
 
-    // Make no sense, the goal is to show some memory problem
-    private static final List<Beer> stupidCache = new ArrayList<>();
+    @GetMapping("/load")
+    public String loadBeers() {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
 
-    @GetMapping
-    public List<Beer> listAll() {
-        Beer beer = generateBeer();
-        stupidCache.add(beer);
-        return stupidCache;
+        List<Beer> beers = new ArrayList<>();
+        long usedMemory = 0;
+        while (((double) usedMemory / maxMemory) < 0.80) {
+            Beer beer = generateBeer(beers.size());
+            beers.add(beer);
+            usedMemory = runtime.totalMemory();
+        }
+
+        return String.format("Carregado %d cervejas! ;)", beers.size());
     }
 
-    private Beer generateBeer() {
-        long id = stupidCache.size() + 1;
-        String name = RandomStringUtils.randomAlphanumeric(10);
+    private Beer generateBeer(long index) {
+        long id = index + 1;
+        String name = RandomStringUtils.randomAlphanumeric(15);
         BeerType type = BeerType.values()[new Random().nextInt(3)];
         return new Beer(id, name, type);
     }

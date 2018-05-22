@@ -4,28 +4,11 @@
   become: true
 
   tasks:
-    - name: Install prerequisites
-      apt: name={{item}} update_cache=yes
-      with_items:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
-
-    - name: Add Docker GPG key
-      apt_key: url=https://download.docker.com/linux/ubuntu/gpg
-
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
-
     - name: Install Docker
-      apt: name=docker-ce
+      yum: name=docker
 
-- name: Install Spring Boot App
-  hosts: all
-  become: true
-
-  tasks:
-    - name: Installing from beerstore:memorydemo
-      command: docker run -p 8080:8080 -d -m 1024M normandesjr/beerstore:memorydemo
+    - name: Ensure docker service is started and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
