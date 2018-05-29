@@ -1,6 +1,7 @@
 FROM openjdk:8-jdk-alpine
 
-ADD target/beerstore.jar /usr/app/app.jar
+ARG JAR_FILE
+ADD target/${JAR_FILE} /usr/app/app.jar
 
 WORKDIR /usr/app
 
