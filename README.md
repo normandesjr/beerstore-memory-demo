@@ -67,7 +67,7 @@ Tente carregar cervejas agora (http://localhost:8080/beers/load)
 Nem conseguiremos, a aplicação já recebe um kill do container
 
 ```
-docker inspect relaxed_brown | grep -i oom
+docker inspect <container id ou nome> | grep -i oom
 "OOMKilled": true,
 ```
 
